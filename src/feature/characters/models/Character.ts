@@ -1,16 +1,17 @@
-export type Character = {
+export type CharacterStructure = {
   characterName: string;
   family: string;
   age: number;
-  picture: string;
   isAlive: boolean;
-  series: string;
-  weapon?: string;
-  skill?: number;
-  kingdomYears?: number;
-  assess?: string;
-  knight?: string;
+  message: string;
   category: Category;
+  picture: string;
+  kingdomYears?: number; // For King
+  weapon?: string; // For Fighter
+  skill?: number; // For Fighter
+  chief?: CharacterStructure; // For Counselor
+  submission?: number; // For Squire
+  master?: CharacterStructure; // ForSquire
 };
 
-type Category = "king" | "counselor" | "fighter" | "squire";
+type Category = "king" | "squire" | "fighter" | "counselor";
