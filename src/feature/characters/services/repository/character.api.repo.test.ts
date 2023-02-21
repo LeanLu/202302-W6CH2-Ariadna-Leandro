@@ -8,8 +8,9 @@ describe("Given CharacterApiRepo class", () => {
       repo = new CharacterApiRepo();
     });
 
-    test("Then if the loadCharacter() method is called, the result should be equal to the mock value", async () => {
+    test("Then if the loadCharacter() method is called with response Ok, the result should be equal to the mock value", async () => {
       global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
         json: jest.fn().mockResolvedValue([
           {
             characterName: "test",
@@ -25,8 +26,17 @@ describe("Given CharacterApiRepo class", () => {
       ]);
     });
 
+    test("Then if the loadCharacter() method is called without response Ok, the result should be equal to the mock value", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        json: jest.fn().mockResolvedValue(null),
+      });
+
+      await expect(repo.loadCharacter()).rejects.toThrow("Error Http");
+    });
+
     test("Then if the updateCharacter() method is called, the result should be equal to the mock value", async () => {
       global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
         json: jest.fn().mockResolvedValue({
           characterName: "test",
         }),
@@ -38,6 +48,14 @@ describe("Given CharacterApiRepo class", () => {
       expect(result).toEqual({
         characterName: "test",
       });
+    });
+
+    test("Then if the updateCharacter() method is called without response Ok, the result should be equal to the mock value", async () => {
+      global.fetch = jest.fn().mockResolvedValue({
+        json: jest.fn().mockResolvedValue(null),
+      });
+
+      await expect(repo.updateCharacter({})).rejects.toThrow("Error Http");
     });
   });
 });

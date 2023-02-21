@@ -19,9 +19,7 @@ export class CharacterApiRepo {
   async loadCharacter(): Promise<CharacterStructure[]> {
     const resp = await fetch(this.url);
 
-    // TEMPORAL: Hasta resolver el test caso Error:
-    // if (!resp.ok)
-    //   throw new Error("Error Http: " + resp.status + ". " + resp.statusText);
+    if (!resp.ok) throw new Error("Error Http");
 
     const data = (await resp.json()) as CharacterStructure[];
 
@@ -41,9 +39,7 @@ export class CharacterApiRepo {
       },
     });
 
-    // TEMPORAL: Hasta resolver el test caso Error:
-    // if (!resp.ok)
-    //   throw new Error("Error Http: " + resp.status + ". " + resp.statusText);
+    if (!resp.ok) throw new Error("Error Http");
 
     const data = (await resp.json()) as CharacterStructure;
 
