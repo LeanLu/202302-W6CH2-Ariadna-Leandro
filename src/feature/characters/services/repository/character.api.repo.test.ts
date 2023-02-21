@@ -18,7 +18,7 @@ describe("Given CharacterApiRepo class", () => {
         ]),
       });
 
-      const result = await repo.loadCharacter();
+      const result = await repo.loadCharacters();
       expect(result).toEqual([
         {
           characterName: "test",
@@ -31,7 +31,7 @@ describe("Given CharacterApiRepo class", () => {
         json: jest.fn().mockResolvedValue(null),
       });
 
-      await expect(repo.loadCharacter()).rejects.toThrow("Error Http");
+      await expect(repo.loadCharacters()).rejects.toThrow("Error Http");
     });
 
     test("Then if the updateCharacter() method is called, the result should be equal to the mock value", async () => {

@@ -16,7 +16,7 @@ export class CharacterApiRepo {
     this.url = "http://localhost:5090/Character";
   }
 
-  async loadCharacter(): Promise<CharacterStructure[]> {
+  async loadCharacters(): Promise<CharacterStructure[]> {
     const resp = await fetch(this.url);
 
     if (!resp.ok) throw new Error("Error Http");
