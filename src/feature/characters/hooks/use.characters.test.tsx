@@ -1,11 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable testing-library/no-unnecessary-act */
 /* eslint-disable testing-library/no-render-in-setup */
+import { act, render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+import { Provider } from "react-redux";
 import { CharacterStructure } from "../models/Character";
-
-// TEMPORAL: Porque no se ha resuelto el error del test.
-// import { CharacterApiRepo } from "../services/repository/character.api.repo";
-// import { useCharacters } from "./use.characters";
+import { CharacterApiRepo } from "../services/repository/character.api.repo";
+import { useCharacters } from "./use.characters";
+import { store } from "../../../core/store/store";
 
 const mockCharacter: CharacterStructure = {
   isAlive: true,
@@ -17,22 +19,46 @@ const mockCharacter: CharacterStructure = {
   category: "king",
 };
 
-// TEMPORAL: No se pudo resolver el error de este test:
+describe("Given the useCharacters Custom Hook and TestComponent", () => {
+  let mockRepo: CharacterApiRepo;
 
-// describe("Given the useCharacteres Custom Hook and TestError component", () => {
-//   describe("When", () => {
-//     test("Then", () => {
-//       let mockRepo: CharacterApiRepo;
+  beforeEach(async () => {
+    mockRepo = {
+      loadCharacters: jest.fn(),
+      updateCharacter: jest.fn(),
+    } as unknown as CharacterApiRepo;
 
-//       mockRepo = {
-//         updateCharacter: jest.fn(),
-//       } as unknown as CharacterApiRepo;
+    const TestComponent = function () {
+      const { updateCharacter } = useCharacters(mockRepo);
 
-//       const { updateCharacter } = useCharacters(mockRepo);
+      return (
+        <>
+          <button onClick={() => updateCharacter(mockCharacter)}>Load</button>
+        </>
+      );
+    };
 
-//       const element = updateCharacter(mockCharacter);
+    await act(async () =>
+      render(
+        <Provider store={store}>
+          <TestComponent></TestComponent>
+        </Provider>
+      )
+    );
+  });
 
-//       expect(element).toEqual(mockCharacter);
-//     });
-//   });
-// });
+  describe("When the TestComponent is rendered", () => {
+    test("Then, the button should be in the document", async () => {
+      const element = await screen.findByRole("button");
+      expect(element).toBeInTheDocument();
+    });
+
+    describe("When the TestComponent is rendered", () => {
+      test("Then, the button should be in the document", async () => {
+        const element = await screen.findByRole("button");
+        await act(async () => userEvent.click(element));
+        expect(mockRepo.updateCharacter).toHaveBeenCalled();
+      });
+    });
+  });
+});
